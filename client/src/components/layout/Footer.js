@@ -27,10 +27,9 @@ const Footer = () => {
             <h3>Contact</h3>
             <ul>
               <li>
-                <a href="mailto:info@blogplatform.com">abc@gmail.com</a>
-              </li>
-              <li>
-                <p>+91 9000000000</p>
+                <a href="mailto:shreyanshc582@gmail.com">
+                  shreyanshc582@gmail.com
+                </a>
               </li>
             </ul>
           </div>
