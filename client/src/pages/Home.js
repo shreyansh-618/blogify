@@ -1,15 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getPosts } from "../redux/slices/postsSlice";
+import { AuthContext } from "../context/AuthContext";
 import PostCard from "../components/blog/PostCard";
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
 import "./Home.css";
 
 const Home = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
   const { posts, loading } = useSelector((state) => state.posts);
   const { scrollYProgress } = useScroll();
 
@@ -38,6 +41,23 @@ const Home = () => {
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
+  };
+
+  // Handle button clicks with page transition
+  const handleGetStarted = () => {
+    // If user is logged in, go to create post page, otherwise go to register
+    const targetPage = user ? "/create-post" : "/register";
+
+    // Apply exit animation and then navigate
+    document.body.classList.add("page-exit-to-right");
+
+    setTimeout(() => {
+      navigate(targetPage);
+      // Remove the class after navigation
+      setTimeout(() => {
+        document.body.classList.remove("page-exit-to-right");
+      }, 100);
+    }, 300); // Match this with the CSS animation duration
   };
 
   return (
@@ -71,9 +91,9 @@ const Home = () => {
             animate={{ opacity: heroInView ? 1 : 0, y: heroInView ? 0 : 20 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <Link to="/register" className="primary-button">
+            <button onClick={handleGetStarted} className="primary-button">
               Get Started
-            </Link>
+            </button>
             <button
               onClick={() => scrollToSection("features")}
               className="secondary-button"
@@ -105,7 +125,7 @@ const Home = () => {
             }}
             transition={{ duration: 0.8 }}
           >
-            Why Choose Blogify
+            Why Choose BlogPlatform
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -167,9 +187,9 @@ const Home = () => {
         ) : posts.length === 0 ? (
           <div className="no-posts">
             <p>No posts found. Be the first to create a post!</p>
-            <Link to="/create-post" className="primary-button">
+            <button onClick={handleGetStarted} className="primary-button">
               Create Your First Post
-            </Link>
+            </button>
           </div>
         ) : (
           <motion.div
@@ -226,9 +246,9 @@ const Home = () => {
           <p>
             Join thousands of writers and share your stories with the world.
           </p>
-          <Link to="/register" className="primary-button">
+          <button onClick={handleGetStarted} className="primary-button">
             Create Your Blog Now
-          </Link>
+          </button>
         </motion.div>
       </section>
     </div>
